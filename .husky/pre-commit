@@ -1,1 +1,14 @@
-npm
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# we run the scripts in auth service
+cd auth
+npm run prettier:fix
+npm run lint
+git add
+if [$? -ne 0]; then
+  echo "Auth tests failed"
+  exit 1
+fi
+
+# other services scripts can be run below
