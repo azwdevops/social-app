@@ -3,5 +3,6 @@ module.exports = {
   extends: "airbnb-typescript-prettier",
   rules: {
     quotes: ["error", "double"],
+    "prettier/prettier": "off",
   },
 };
