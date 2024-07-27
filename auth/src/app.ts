@@ -1,5 +1,7 @@
 import express from "express";
-import { signUprouter } from "@/routes";
+import routes from "@/routes";
+
+const { signUprouter } = routes;
 
 const app = express();
 
