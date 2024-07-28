@@ -9,7 +9,10 @@ signUpRouter.post(
   SIGNUP_ROUTE,
   [
     body("email").isEmail().withMessage("Email must be valid format"),
-    body("password").trim().isLength({ min: 8, max: 15 }).withMessage("Password must be between 8 and 15 characters"),
+    body("password")
+      .trim()
+      .isLength({ min: 8, max: 15 })
+      .withMessage("Password must be between 8 and 15 characters"),
     body("password")
       .matches(/^(.*[a-z].*)$/)
       .withMessage("Password must contain a lowercase letter"),
