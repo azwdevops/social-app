@@ -32,6 +32,7 @@ module.exports = {
       },
     ],
     "import/no-unresolved": "error",
+    "import/prefer-default-export": "off",
   },
   ignorePatterns: [".eslintrc.js"],
 };
