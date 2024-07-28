@@ -1,6 +1,5 @@
 import express, { Request, Response } from "express";
 import { body, validationResult } from "express-validator";
-import { handleMethodNotAllowed } from "./utils";
 
 export const SIGNUP_ROUTE = "/api/auth/signup";
 
@@ -27,17 +26,5 @@ signUpRouter.post(
     return res.status(200).send({});
   }
 );
-
-signUpRouter.options(SIGNUP_ROUTE, (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "POST,OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Content-Length, X-Requested-With");
-  res.sendStatus(200);
-});
-
-signUpRouter.get(SIGNUP_ROUTE, handleMethodNotAllowed);
-signUpRouter.put(SIGNUP_ROUTE, handleMethodNotAllowed);
-signUpRouter.patch(SIGNUP_ROUTE, handleMethodNotAllowed);
-signUpRouter.delete(SIGNUP_ROUTE, handleMethodNotAllowed);
 
 export default signUpRouter;

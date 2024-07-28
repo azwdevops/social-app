@@ -5,37 +5,6 @@ import { SIGNUP_ROUTE } from "@/routes/signup";
 console.clear(); // to ensure we only get the latest issues, we clear our console
 
 /**
- * available HTTP methods inSIGNUP_ROUTE * - POST
- */
-
-describe("test signup route method availability", () => {
-  let email = "";
-  let password = "";
-  beforeAll(() => {
-    email = "email@email.com";
-    password = "password1";
-  });
-
-  it("should return 405 for GET, PUT, PATCH , DELETE methods", async () => {
-    await request(app).get(SIGNUP_ROUTE).send({ email, password }).expect(405);
-    await request(app).put(SIGNUP_ROUTE).send({ email, password }).expect(405);
-    await request(app).patch(SIGNUP_ROUTE).send({ email, password }).expect(405);
-    await request(app).delete(SIGNUP_ROUTE).send({ email, password }).expect(405);
-  });
-
-  it("should return 200 for POST & OPTIONS requests", async () => {
-    await request(app).post(SIGNUP_ROUTE).send({ email, password }).expect(200);
-    await request(app).options(SIGNUP_ROUTE).expect(200);
-  });
-
-  it("should return POST as the only allowed method from an OPTIONS request", async () => {
-    const response = await request(app).options(SIGNUP_ROUTE).expect(200);
-    expect(response.get("access-control-allow-methods")).toContain("POST");
-    expect(response.get("access-control-allow-methods")).toContain("OPTIONS");
-  });
-});
-
-/**
  * valid email conditions
  * - standard email formats from express-validator package
  */
