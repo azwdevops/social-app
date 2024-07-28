@@ -1,3 +1,3 @@
-import signUprouter from "./signup";
+export * from "./signup";
 
-export default { signUprouter };
+export { default as signUpRouter } from "./signup";
