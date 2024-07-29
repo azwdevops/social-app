@@ -20,11 +20,17 @@ describe("test validity of email input", () => {
 
   it("should return 422 if the email is not valid", async () => {
     await request(app).post(SIGNUP_ROUTE).send({ password }).expect(422);
-    await request(app).post(SIGNUP_ROUTE).send({ email: "email test" }).expect(422);
+    await request(app)
+      .post(SIGNUP_ROUTE)
+      .send({ email: "email test" })
+      .expect(422);
   });
 
   it("should return 200 if email is valid", async () => {
-    await request(app).post(SIGNUP_ROUTE).send({ email: "email@email.com", password }).expect(200);
+    await request(app)
+      .post(SIGNUP_ROUTE)
+      .send({ email: "email@email.com", password })
+      .expect(200);
   });
 });
 
@@ -48,22 +54,57 @@ describe("test validity of password input", () => {
   });
 
   it("should return 422 if password contains less than 8 characters", async () => {
-    await request(app).post(SIGNUP_ROUTE).send({ email, password: "pass1" }).expect(422);
+    await request(app)
+      .post(SIGNUP_ROUTE)
+      .send({ email, password: "pass1" })
+      .expect(422);
   });
 
   it("should return 422 if password is more than 15 characters", async () => {
-    await request(app).post(SIGNUP_ROUTE).send({ email, password: "verylongpassword100" }).expect(422);
+    await request(app)
+      .post(SIGNUP_ROUTE)
+      .send({ email, password: "verylongpassword100" })
+      .expect(422);
   });
 
   it("should return 422 if password does not contain 1 number", async () => {
-    await request(app).post(SIGNUP_ROUTE).send({ email, password: "Password" }).expect(422);
+    await request(app)
+      .post(SIGNUP_ROUTE)
+      .send({ email, password: "Password" })
+      .expect(422);
   });
 
   it("should return 422 if password does not contain a lowercase letter", async () => {
-    await request(app).post(SIGNUP_ROUTE).send({ email, password: "PASSWORD1" }).expect(422);
+    await request(app)
+      .post(SIGNUP_ROUTE)
+      .send({ email, password: "PASSWORD1" })
+      .expect(422);
   });
 
   it("should return 200 if password is valid", async () => {
-    await request(app).post(SIGNUP_ROUTE).send({ email, password: "password1" }).expect(200);
+    await request(app)
+      .post(SIGNUP_ROUTE)
+      .send({ email, password: "password1" })
+      .expect(200);
+  });
+});
+
+describe("tets sanitization of email input", () => {
+  it("should not contain uppercase letters in the domain of email", async () => {
+    const normalizedEmail = "email@email.com";
+    const response = await request(app)
+      .post(SIGNUP_ROUTE)
+      .send({ email: "email@EMAIL.COM", password: "password1" })
+      .expect(200);
+    expect(response.body.email).toEqual(normalizedEmail);
+  });
+});
+
+describe("test sanitization of password input", () => {
+  it("should not contain unescaped characters", async () => {
+    await request(app)
+      .post(SIGNUP_ROUTE)
+      .send({ email: "email@email.com", password: "password1<" })
+      .expect(200);
   });
 });
