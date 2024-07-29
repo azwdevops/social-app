@@ -13,7 +13,9 @@ beforeAll(async () => {
 // clean up the database
 beforeEach(async () => {
   const allCollections = await mongoose.connection.db.collections();
-  await Promise.all(allCollections.map((collection) => collection.deleteMany({})));
+  await Promise.all(
+    allCollections.map((collection) => collection.deleteMany({}))
+  );
 });
 
 // after all tests

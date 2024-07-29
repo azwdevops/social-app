@@ -3,7 +3,6 @@
 
 # we run the scripts in auth service
 cd auth
-npm run prettier:fix
 npm run lint
 npm run test
 if [$? -ne 0]; then
