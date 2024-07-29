@@ -14,4 +14,13 @@ const UserSchema = new Schema({
 
 const User = model<UserDocument, UserModel>("user", UserSchema);
 
+UserSchema.pre("save", async function preSaveFunction(this: UserDocument, next) {
+  const existingUser = await User.findOne({ email: this.email });
+  if (existingUser) {
+    throw new Error("Email already in the database");
+  }
+
+  next();
+});
+
 export default User;

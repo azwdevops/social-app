@@ -33,6 +33,7 @@ module.exports = {
     ],
     "import/no-unresolved": "error",
     "import/prefer-default-export": "off",
+    "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
   },
   ignorePatterns: [".eslintrc.js"],
 };
