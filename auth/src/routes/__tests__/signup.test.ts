@@ -1,6 +1,7 @@
 import app from "@/app";
 import request from "supertest";
 import { SIGNUP_ROUTE } from "@/routes/signup";
+import { User } from "@/models";
 
 console.clear(); // to ensure we only get the latest issues, we clear our console
 
@@ -26,11 +27,11 @@ describe("test validity of email input", () => {
       .expect(422);
   });
 
-  it("should return 200 if email is valid", async () => {
+  it("should return 201 if email is valid", async () => {
     await request(app)
       .post(SIGNUP_ROUTE)
       .send({ email: "email@email.com", password })
-      .expect(200);
+      .expect(201);
   });
 });
 
@@ -81,11 +82,11 @@ describe("test validity of password input", () => {
       .expect(422);
   });
 
-  it("should return 200 if password is valid", async () => {
+  it("should return 201 if password is valid", async () => {
     await request(app)
       .post(SIGNUP_ROUTE)
       .send({ email, password: "password1" })
-      .expect(200);
+      .expect(201);
   });
 });
 
@@ -95,7 +96,7 @@ describe("tets sanitization of email input", () => {
     const response = await request(app)
       .post(SIGNUP_ROUTE)
       .send({ email: "email@EMAIL.COM", password: "password1" })
-      .expect(200);
+      .expect(201);
     expect(response.body.email).toEqual(normalizedEmail);
   });
 });
@@ -105,6 +106,29 @@ describe("test sanitization of password input", () => {
     await request(app)
       .post(SIGNUP_ROUTE)
       .send({ email: "email@email.com", password: "password1<" })
-      .expect(200);
+      .expect(201);
+  });
+});
+
+describe("tests saving the signed up user to the database", () => {
+  const validUserInfo = {
+    email: "email@email.com",
+    password: "password1",
+  };
+  it("saves the user successfully as long as the information is valid", async () => {
+    const response = await request(app)
+      .post(SIGNUP_ROUTE)
+      .send(validUserInfo)
+      .expect(201);
+    const user = await User.findOne({ email: response.body.email });
+    const userEmail = user ? user.email : "";
+
+    expect(user).toBeDefined();
+    expect(userEmail).toEqual(validUserInfo.email);
+  });
+
+  it("does not allow saving a user with a duplicate email", async () => {
+    await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(201);
+    await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(422);
   });
 });
